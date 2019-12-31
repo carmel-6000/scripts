@@ -10,15 +10,9 @@ pwd=$(pwd)
 
 modulesFolder=$pwd/src/modules
 
-checkDependencies(){
-
-	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' jq|grep "install ok installed")
-	#echo Checking for somelib: $PKG_OK
-	if [ "" == "$PKG_OK" ]; then
-		echo "Package jq is missing. Please run 'sudo apt install jq' and run again"
-		exit
-	fi
-}
+NOCOLOR='\033[0m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
 
 
 updateModule(){
@@ -41,7 +35,7 @@ updateModule(){
 			echo "git error. Try to update this module manually."
 		        sleep 1
 		else
-			echo "OK"
+			echo -e "${GREEN}OK${NOCOLOR}"
 		fi	
 	fi	
 	cd ..	
@@ -58,7 +52,6 @@ else
 	cd $modulesFolder
 fi	
 
-checkDependencies
 
 echo "Updating existing modules..."
 for moduleDir in */; do

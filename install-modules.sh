@@ -16,6 +16,8 @@ checkDependencies(){
 	fi
 }
 
+checkDependencies
+
 NOCOLOR='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -41,12 +43,15 @@ if [ ! -d "$modulesFolder/scripts" ];then
         exit
 fi
 
+echo -n "Updating module scripts..."
 cd scripts
-git pull origin master
+git pull origin master >/dev/null 2>/dev/null
 cd ..
+echo -e "${GREEN}OK${NOCOLOR}"
 
 readarray -t modulesList < <(cat scripts/modules-list.json | jq -r '.[] | .name')
-echo "Available modules for installation"
+echo
+echo "List of available modules for installation"
 echo
 printf '%s\n' "${modulesList[@]}"
 echo
