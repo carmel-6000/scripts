@@ -1,0 +1,47 @@
+[
+{
+  "name": "fileshandler",
+  "path": "../src/modules/fileshandler",
+  "routes": "server/routes",
+  "mixins": "server/mixins",
+  "models": "server/models",
+  "autoApplyMixins":["FilesHandler"],
+  "github": "https://github.com/carmel-6000/fileshandler"
+},
+{
+  "name": "auth",
+  "path": "../src/modules/auth",
+  "models": "server/models",
+  "github": "https://github.com/carmel-6000/carmel-react-auth"
+},
+{
+  "name":"scripts",
+  "path":"../src/modules/scripts",
+  "github": "https://github.com/carmel-6000/scripts",
+  "enabled":false
+},
+{
+  "name":"notifications",
+  "path":"../src/modules/notifications",
+  "github": "https://github.com/carmel-6000/notifications",
+  "enabled":false
+},
+{
+  "name":"dashboard",
+  "path":"../src/modules/dashboard",
+  "github": "https://github.com/carmel-6000/carmel-react-dashboard",
+  "enabled":false
+},
+{
+  "name":"tools",
+  "path":"../src/modules/tools",
+  "github": "https://github.com/carmel-6000/carmel-tools",
+  "enabled":false
+},
+{
+  "name":"samples",
+  "path":"../src/modules/samples",
+  "github": "https://github.com/carmel-6000/pumbasamples",
+  "enabled":false
+}
+]
