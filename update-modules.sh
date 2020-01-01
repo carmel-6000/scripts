@@ -28,8 +28,7 @@ updateModule(){
 		echo "There are diffs, please checkout or commit repository and then try again"
 		sleep 1
 	else
-		#git pull origin master
-		ls >/dev/null
+		git pull origin master >/dev/null 2>/dev/null
 	        retVal=$?
 		if [ $retVal -ne 0 ]; then
 			echo "git error. Try to update this module manually."
