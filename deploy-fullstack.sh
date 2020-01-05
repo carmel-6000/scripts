@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source deployment.config.sh
+#source deployment.config.sh
 
 cd $remoteFolder/$projectFolder
 

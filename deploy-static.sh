@@ -1,36 +1,43 @@
 #!/bin/bash
 
-if [ -z "$1" ]
-  then
-    echo "Please specify first argument from which resource to copy"
-    echo "e.g: ./deploy-static.sh carmeldev:/home/carmel/www/prod/vango-assistant assistant.vango.run" 
-    exit
+echo
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo "~ Static project deployment scripts  ver 1.0   ~"
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo
+
+NOCOLOR='\033[0m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+
+readarray -t sourceFolders < <(ssh carmeldev ls /home/carmel/www/prod)
+printf '%s\n' "${sourceFolders[@]}"
+read -p "Type source folder from carmeldev to deploy on production server:" sourceFolder
+
+if [[ ! " ${sourceFolders[@]} " =~ " ${sourceFolder} " ]]; then
+	echo "Sorry, the folder you typed doesn't exist, try again..."
+	exit
 fi
 
-if [ -z "$1" ]
-  then
-    echo "Please specify second argument to which folder to copy relative to sivan:/home/prod/"
-    echo "e.g: ./deploy-static.sh carmeldev:/home/carmel/www/prod/vango-assistant assistant.vango.run" 
-    exit
+readarray -t targetFolders < <(ssh sivan ls /home/carmel/www/prod)
+printf '%s\n' "${targetFolders[@]}"
+read -p "Type target folder from sivan:" targetFolder
+
+if [[ ! " ${targetFolders[@]} " =~ " ${targetFolder} " ]]; then
+	echo "Sorry, the folder you typed doesn't exist, try again..."
+	exit
 fi
+
+echo "Copying from carmeldev:/home/carmel/www/prod/$sourceFolder to /tmp/kl..."
 
 rm /tmp/kl -rf
 mkdir /tmp/kl
-rsync -rvza carmeldev:/home/carmel/www/prod/$1/* /tmp/kl
+rsync -rvza carmeldev:/home/carmel/www/prod/$sourceFolder/* /tmp/kl
+cd /tmp/kl
+find . -type f -name "*.map" |xargs rm
 
-destFolder=/home/carmel/www/prod/$2
-folder=$(ssh sivan ls $destFolder 2>/dev/null)
-echo $folder
+echo "rsync --dry-run --delete -rvza /tmp/kl/* sivan:/home/carmel/www/prod/$targetFolder"
 
-if [ -z "$folder" ]; then
-	echo "No folder on dest: $destFolder"
-	echo "Aborting..."
-	exit
-else
-	echo "Destination folder exist ($destFolder)"
-fi
-
-echo "rsync --delete -rvza /tmp/kl/* sivan:$destFolder"
 read -r -p "Are you sure? [y/N] " response
 case "$response" in
     [yY][eE][sS]|[yY]) 
@@ -40,8 +47,10 @@ case "$response" in
         ;;
 esac
 
-echo "confirmed"
+echo
+rsync  -rvza /tmp/kl/* sivan:/home/carmel/www/prod/$targetFolder
+echo
 
-rsync --delete -rvza /tmp/kl/* sivan:$destFolder
-
-
+echo
+echo -e "${GREEN}Your project has been successfully deployed on production server!${NOCOLOR}"
+echo
