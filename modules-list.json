@@ -6,7 +6,7 @@
   "mixins": "server/mixins",
   "models": "server/models",
   "autoApplyMixins":["FilesHandler"],
-  "github": "https://github.com/carmel-6000/fileshandler"
+  "github": "https://github.com/carmel-6000/files-handler"
 },
 {
   "name": "auth",
@@ -29,7 +29,7 @@
 {
   "name":"dashboard",
   "path":"../src/modules/dashboard",
-  "github": "https://github.com/carmel-6000/carmel-react-dashboard",
+  "github": "https://github.com/carmel-6000/newdashboard",
   "enabled":false
 },
 {
