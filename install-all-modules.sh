@@ -73,6 +73,7 @@ do
 
 	mFolder=$(basename ${modulesPath[$module]})
 	echo "Cloning $newModule into $mFolder.."
+	echo "git clone ${modulesGit[$module]} $modPath"
 	git clone ${modulesGit[$module]} $modPath
 			
 	retVal=$?
