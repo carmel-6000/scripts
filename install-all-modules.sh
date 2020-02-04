@@ -43,38 +43,33 @@ if [ ! -d "$modulesFolder/scripts" ];then
         exit
 fi
 
-
-
 #Iterate through all models in model-config
 #Does it exit? great, update it.
 #If doesn't exist, clone it
-
 readarray -t modulesList < <(cat ../../server/model-config.json | jq -r '._meta.modules|.[]|.name')
 readarray -t modulesPath < <(cat ../../server/model-config.json | jq -r '._meta.modules|.[]|.path')
 readarray -t modulesGit < <(cat ../../server/model-config.json | jq -r '._meta.modules|.[]|.github')
 #printf '%s\n' "${modulesList[@]}"
 #printf '%s\n' "${modulesPath[@]}"
-
-currDir="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-
-echo "currDir--->$currDir"
-
-echo "currDir 2? $(dirname "$0")"
-
+#currDir="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+#echo "currDir--->$currDir"
+#echo "currDir 2? $(dirname "$0")"
 #currDir="$currDir/../../server"
-currDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+#echo "BASH_SOURCE? $BASH_SOURCE"
+#echo "BASH 2? $(dirname ${BASH_SOURCE[0]})"
+#currDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+currDir=$(dirname ${BASH_SOURCE[0]})
+
+echo "currDir? $currDir"
 
 for module in "${!modulesList[@]}"
 do
-   #echo "Module:${modulesList[$module]}" 
-   
-   modPath="$currDir/${modulesPath[$module]}"
+   #echo "Module:${modulesList[$module]}"    
+   modPath="server/${modulesPath[$module]}"
    #echo "modPath:$modPath"
-
    if [ ! -d "$modPath" ]; then
 
    	echo "Installing module $newModule..."
-
 	mFolder=$(basename ${modulesPath[$module]})
 	echo "Cloning $newModule into $mFolder.."
 	echo "git clone ${modulesGit[$module]} $modPath"
@@ -88,16 +83,9 @@ do
 		echo "Module has been successfully installed, on model-config.json switch enabled to 'true' to enable on your project"
 	fi
 
-
 	else
 		echo "Module (${modulesList[$module]}) is already installed on folder $modPath"
 	fi
-
-
 done
 #moduleEntry=$(cat ../../server/model-config.json |jq '._meta.modules')
 #echo "moduleEntry: $moduleEntry"
-
-
-
-
