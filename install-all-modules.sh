@@ -30,9 +30,9 @@ if [ ! -d "$modulesFolder" ];then
 	echo "make sure you run this script from your project root path"
 	echo "and you do have modules installed and then try again"
 	echo
-    exit
-#else
-	#cd $modulesFolder
+        exit
+else
+	cd $modulesFolder
 fi	
 
 if [ ! -d "$modulesFolder/scripts" ];then
@@ -65,7 +65,8 @@ echo "currDir? $currDir"
 for module in "${!modulesList[@]}"
 do
    #echo "Module:${modulesList[$module]}"    
-   modPath="server/${modulesPath[$module]}"
+   #modPath="server/${modulesPath[$module]}"
+   modPath=$(basename ${modulesPath[$module]})
    #echo "modPath:$modPath"
    if [ ! -d "$modPath" ]; then
 
