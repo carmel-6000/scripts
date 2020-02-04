@@ -57,7 +57,10 @@ readarray -t modulesGit < <(cat ../../server/model-config.json | jq -r '._meta.m
 
 currDir="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-#echo "currDir--->$currDir"
+echo "currDir--->$currDir"
+
+echo "currDir 2? $(dirname "$0")"
+
 currDir="$currDir/../../server"
 
 for module in "${!modulesList[@]}"
