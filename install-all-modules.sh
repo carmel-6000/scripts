@@ -70,9 +70,10 @@ do
    if [ ! -d "$modPath" ]; then
 
    	echo "Installing module $newModule..."
-	mFolder=$(basename ${modulesPath[$module]})
-	echo "Cloning $newModule into $mFolder.."
+	#mFolder=$(basename ${modulesPath[$module]})
+	#echo "Cloning $newModule into $mFolder.."
 	echo "git clone ${modulesGit[$module]} $modPath"
+	echo "CURRENT PWD? $(pwd)"
 	git clone ${modulesGit[$module]} $modPath
 			
 	retVal=$?
