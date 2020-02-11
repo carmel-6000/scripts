@@ -30,7 +30,7 @@ if [ ! -d "$modulesFolder" ];then
 	echo "make sure you run this script from your project root path"
 	echo "and you do have modules installed and then try again"
 	echo
-        exit
+    exit
 else
 	cd $modulesFolder
 fi	
@@ -40,7 +40,7 @@ if [ ! -d "$modulesFolder/scripts" ];then
 	echo "Could not find $modulesFolder/scripts" 
 	echo "Make sure you clone this module (cd src/modules && git clone https://github.com/carmel-6000/scripts scripts) and try again"
 	echo
-        exit
+    exit
 fi
 
 #Iterate through all models in model-config
@@ -49,15 +49,8 @@ fi
 readarray -t modulesList < <(cat ../../server/model-config.json | jq -r '._meta.modules|.[]|.name')
 readarray -t modulesPath < <(cat ../../server/model-config.json | jq -r '._meta.modules|.[]|.path')
 readarray -t modulesGit < <(cat ../../server/model-config.json | jq -r '._meta.modules|.[]|.github')
-#printf '%s\n' "${modulesList[@]}"
-#printf '%s\n' "${modulesPath[@]}"
-#currDir="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-#echo "currDir--->$currDir"
-#echo "currDir 2? $(dirname "$0")"
-#currDir="$currDir/../../server"
-#echo "BASH_SOURCE? $BASH_SOURCE"
-#echo "BASH 2? $(dirname ${BASH_SOURCE[0]})"
-#currDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+readarray -t versions < <(cat ../../server/model-config.json | jq -r '._meta.modules|.[]|.fetch-version')
+
 currDir=$(dirname ${BASH_SOURCE[0]})
 
 echo "currDir? $currDir"
@@ -76,6 +69,8 @@ do
 	echo "git clone ${modulesGit[$module]} $modPath"
 	echo "CURRENT PWD? $(pwd)"
 	git clone ${modulesGit[$module]} $modPath
+
+	
 			
 	retVal=$?
 	if [ $retVal -ne 0 ]; then
