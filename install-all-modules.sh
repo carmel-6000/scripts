@@ -43,6 +43,8 @@ if [ ! -d "$modulesFolder/scripts" ];then
     exit
 fi
 
+source scripts/update-samples-json.sh
+
 #Iterate through all models in model-config
 #Does it exit? great, update it.
 #If doesn't exist, clone it
@@ -53,7 +55,7 @@ readarray -t versions < <(cat ../../server/model-config.json | jq -r '._meta.mod
 
 currDir=$(dirname ${BASH_SOURCE[0]})
 
-echo "currDir? $currDir"
+#echo "currDir? $currDir"
 
 for module in "${!modulesList[@]}"
 do

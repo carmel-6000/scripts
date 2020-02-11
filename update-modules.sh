@@ -58,4 +58,6 @@ for moduleDir in */; do
 	updateModule $moduleDir
 done
 
+source scripts/update-samples-json.sh
+
 echo Done

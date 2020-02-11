@@ -6,6 +6,7 @@ echo "~ Modules installed ver 1.0   ~"
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo
 
+
 checkDependencies(){
 
 	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' jq|grep "install ok installed")
@@ -108,3 +109,6 @@ if [ ! -d "$mFolder" ]; then
 else
 	echo "Module ($newModule) is already installed on folder $modulesFolder/$newModule"
 fi
+
+
+source scripts/update-samples-json.sh
