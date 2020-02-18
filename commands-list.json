@@ -1,5 +1,10 @@
 [
     {
+        "name": "help",
+        "brief": "Configure package.json scripts, and give a short breif for each one.",
+        "src": "src/modules/scripts/./help.sh"
+    },
+    {
         "name": "install-modules",
         "run": "npm run install-modules",
         "brief": "Install all carmel modules!",
