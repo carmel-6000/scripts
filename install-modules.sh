@@ -50,6 +50,7 @@ git pull origin master >/dev/null 2>/dev/null
 cd ..
 echo -e "${GREEN}OK${NOCOLOR}"
 
+cat scripts/modules-list.json
 readarray -t modulesList < <(cat scripts/modules-list.json | jq -r '.[] | .name')
 echo
 echo "List of available modules for installation"
@@ -104,11 +105,10 @@ if [ ! -d "$mFolder" ]; then
 		echo -e "${GREEN}OK${NOCOLOR}"
 		echo "Module has been successfully installed, on model-config.json switch enabled to 'true' to enable on your project"
 	fi
-
-
 else
 	echo "Module ($newModule) is already installed on folder $modulesFolder/$newModule"
 fi
 
-
-source scripts/update-samples-json.sh
+if [ -d "$modulesFolder/samples"] && [ -d "$modulesFolder/scripts"]; then
+	source scripts/update-samples-json.sh
+fi	
