@@ -38,6 +38,16 @@ if ! [ -f $DUMPS_DIR/$DB.dump.sql ]; then
 fi
 
 if ! [ -f $DUMPS_DIR/db_changes.wc ]; then
+	echo -n "Cannot find the file db_changes.wc. If you continue, your database will be overwritten. Continue? [Yes/n] "
+     	read confirm
+     	if [ -z $confirm ] ; then
+		echo "If you want to continue, write Yes"
+          	exit
+	fi
+	if [ $confirm != "Yes" ] ; then
+		echo Ok..so chao!
+          	exit	
+	fi
 	touch $DUMPS_DIR/db_changes.wc
 	start=0
 fi
