@@ -58,6 +58,9 @@ for moduleDir in */; do
 	updateModule $moduleDir
 done
 
-source scripts/update-samples-json.sh
+if [ -d "$modulesFolder/samples"] && [ -d "$modulesFolder/scripts"]; then
+	source scripts/update-samples-json.sh
+fi	
+
 
 echo Done
