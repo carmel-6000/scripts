@@ -26,6 +26,36 @@ if [ ! -d "$modulesFolder/scripts" ]; then
     exit
 fi
 
+recursiveMerge() { #? $1 -> exisings data, $2 -> confData
+    res=$1
+    type=$(echo $1 | jq type)
+    if [ $type != '"object"' ]; then
+        echo $1
+        # echo "TYPE: $type" [ $type != '"object"' ]
+    else
+        for row in $(echo $2 | jq keys); do
+            if [ $row != '[' ] && [ $row != ']' ]; then
+
+                row=$(sed 's/,//g' <<<$row)
+                existance=$(echo $1 | jq '.'$row'')
+
+                val=$(echo $2 | jq '.'$row'')
+                if [ "$existance" != "null" ]; then
+                    type=$(echo "$existance" | jq type)
+                    if [ $type == '"object"' ]; then
+
+                        innerMerge=$(recursiveMerge "$existance" "$val")
+                        res=$(echo $res {$row:$innerMerge} | jq -s add)
+                    fi
+                else
+                    res=$(echo $res {$row:$val} | jq -s add)
+                fi
+            fi
+        done
+        echo $res
+    fi
+}
+
 writeServerConfig() { # params: $1-moduleName  $2-srcFolder $3-srcEnv $4-destPath /optional-- $5- destEnv
     modulename=$1
     confFolderPath=$2
@@ -58,26 +88,34 @@ writeServerConfig() { # params: $1-moduleName  $2-srcFolder $3-srcEnv $4-destPat
             echo "adding $modulename to $destFileName"
 
             moduleEntry=$(cat ../../server/$destFileName | jq '.modules.'$modulename'')
-            #echo "moduleEntry: $moduleEntry"
+            # echo "moduleEntry: $moduleEntry"
+            confData=$(cat $confFilePath | jq '. ') #| tr '\n' ' '
             if [ "$moduleEntry" != "null" ]; then
-                echo "Module ($modulename) is already listed on $destFileName"
+                echo "Module ($modulename) is already listed on $destFileName, check if updates needed."
+
+                towrite=$(recursiveMerge "$moduleEntry" "$confData")
+
+                confData=$towrite
+            fi
+            echo "Adding module into $destFileName..."
+            # confData=$(sed "s/'//g" <<<$confData)
+
+            existingData=$(cat $destPath | jq "del(.modules.$modulename)")
+
+            echo "$existingData" | jq ".modules += {$modulename:$confData}" >/tmp/$destFileName
+
+            # cat $destPath | jq ".modules += {$modulename:$confData}" >/tmp/$destFileName
+
+            if [ ! -s /tmp/$destFileName ]; then
+                echo "Could not add a new entry to $destFileName"
+                echo "please do it manually or fix script or $destFileName syntax on pumba"
             else
-                echo "Adding module into $destFileName..."
-                confData=$(cat $confFilePath | jq '. ' | tr '\n' ' ')
-
-                # echo $confData
-                cat $destPath | jq ".modules += {$modulename:$confData}" >/tmp/$destFileName
-
-                if [ ! -s /tmp/$destFileName ]; then
-                    echo "Could not add a new entry to $destFileName"
-                    echo "please do it manually or fix script or $destFileName syntax on pumba"
-                else
-                    cp /tmp/$destFileName $destPath
-                    echo -e "${YL}added $modulename config. \\n${NC}"
-                fi
+                cp /tmp/$destFileName $destPath
+                echo -e "${YL}done with $modulename $destFileName. \\n${NC}"
             fi
 
         fi
+
     fi
     echo
 }
@@ -98,22 +136,23 @@ writeClientConfig() { # $1-moduleName  $2-srcFolder $3-destPath
 
             moduleEntry=$(cat ../../src/consts/$destFileName | jq '.'$modulename'')
             #echo "moduleEntry: $moduleEntry"
+            confData=$(cat $confFilePath | jq '. ' )#| tr '\n' ' '
             if [ "$moduleEntry" != "null" ]; then
-                echo "Module ($modulename) is already listed on $destFileName"
+                echo "Module ($modulename) is already listed on $destFileName, check if updates needed."
+                towrite=$(recursiveMerge "$moduleEntry" "$confData")
+                confData=$towrite
+            fi
+            echo "Adding module into $destFileName..."
+            existingData=$(cat $destPath | jq "del(.$modulename)")
+
+            echo "$existingData" | jq ". += {$modulename:$confData}" >/tmp/$destFileName
+
+            if [ ! -s /tmp/$destFileName ]; then
+                echo "Could not add a new entry to $destFileName"
+                echo "please do it manually or fix script or $destFileName syntax on pumba"
             else
-                echo "Adding module into $destFileName..."
-                confData=$(cat $confFilePath | jq '. ' | tr '\n' ' ')
-
-                # echo $confData
-                cat $destPath | jq ". += {$modulename:$confData}" >/tmp/$destFileName
-
-                if [ ! -s /tmp/$destFileName ]; then
-                    echo "Could not add a new entry to $destFileName"
-                    echo "please do it manually or fix script or $destFileName syntax on pumba"
-                else
-                    cp /tmp/$destFileName $destPath
-                    echo -e "${YL}added $modulename config to $destFileName. \\n${NC}"
-                fi
+                cp /tmp/$destFileName $destPath
+                echo -e "${YL}done with $modulename config to $destFileName. \\n${NC}"
             fi
 
         fi
