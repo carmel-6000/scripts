@@ -41,5 +41,12 @@
         "run": "npm run generate-config",
         "brief": "Add config entrys for repositories in config.json and config.production.json.",
         "src": "src/modules/scripts/./config-generator.sh"
+    },
+    {
+        "name": "run-db-changes",
+        "run": "npm run run-db-changes",
+        "params": "<db-name>",
+        "brief": "Create/Update database on local environment",
+        "src": "src/modules/scripts/./run-db-changes.sh"
     }
 ]
