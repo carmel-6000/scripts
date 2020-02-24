@@ -136,25 +136,29 @@ writeClientConfig() { # $1-moduleName  $2-srcFolder $3-destPath
 
             moduleEntry=$(cat ../../src/consts/$destFileName | jq '.'$modulename'')
             #echo "moduleEntry: $moduleEntry"
-            confData=$(cat $confFilePath | jq '. ' )#| tr '\n' ' '
-            if [ "$moduleEntry" != "null" ]; then
-                echo "Module ($modulename) is already listed on $destFileName, check if updates needed."
-                towrite=$(recursiveMerge "$moduleEntry" "$confData")
-                confData=$towrite
-            fi
-            echo "Adding module into $destFileName..."
-            existingData=$(cat $destPath | jq "del(.$modulename)")
-
-            echo "$existingData" | jq ". += {$modulename:$confData}" >/tmp/$destFileName
-
-            if [ ! -s /tmp/$destFileName ]; then
-                echo "Could not add a new entry to $destFileName"
-                echo "please do it manually or fix script or $destFileName syntax on pumba"
+            confData=$(cat $confFilePath | jq '. ') #| tr '\n' ' '
+            if [ "$confData" == "" ] || [ "$confData" == "null" ]; then
+                echo "no conf data, sorry"
             else
-                cp /tmp/$destFileName $destPath
-                echo -e "${YL}done with $modulename config to $destFileName. \\n${NC}"
-            fi
+                if [ "$moduleEntry" != "null" ]; then
+                    echo "Module ($modulename) is already listed on $destFileName, check if updates needed."
+                    towrite=$(recursiveMerge "$moduleEntry" "$confData")
+                    confData=$towrite
+                fi
+                echo "Adding module into $destFileName..."
+                existingData=$(cat $destPath | jq "del(.$modulename)")
 
+                echo "$existingData" | jq ". += {$modulename:$confData}" >/tmp/$destFileName
+
+                if [ ! -s /tmp/$destFileName ]; then
+                    echo "Could not add a new entry to $destFileName"
+                    echo "please do it manually or fix script or $destFileName syntax on pumba"
+                else
+                    cp /tmp/$destFileName $destPath
+                    echo -e "${YL}done with $modulename config to $destFileName. \\n${NC}"
+                fi
+
+            fi
         fi
     fi
     echo
