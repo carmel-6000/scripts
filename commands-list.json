@@ -48,5 +48,11 @@
         "params": "<db-name>",
         "brief": "Create/Update database on local environment",
         "src": "src/modules/scripts/./run-db-changes.sh"
+    },
+    {
+        "name": "update-samples-json",
+        "run": "npm run update-samples-json",
+        "brief": "Create/Update sample list json",
+        "src": "src/modules/scripts/./update-samples-json.sh"
     }
 ]

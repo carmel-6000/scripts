@@ -184,6 +184,17 @@ if [ ! -s $pwd/src/consts/ModulesConfig.json ]; then # create client config
     echo -e "creating client config..\\n"
     echo {} >$pwd/src/consts/ModulesConfig.json
 fi
+readarray -t configModulesList < <(cat $pwd/src/consts/ModulesConfig.json | jq -r '.modulesList')
+
+for i in "${modulesList[@]}";do
+
+    if [[ ! "${configModulesList[@]}" =~ ${i}  ]];then
+        data=$(cat $pwd/src/consts/ModulesConfig.json|jq '.modulesList |= (.+ ["'$i'"])')
+        echo ${data} >$pwd/src/consts/ModulesConfig.json
+    fi
+
+done
+
 
 for index in "${!modulesList[@]}"; do
     modulename=${modulesList[index]}
