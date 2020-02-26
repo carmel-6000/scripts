@@ -59,5 +59,14 @@
     "fetch-version": "latest",
     "current-version": "1.0.0",
     "enabled": false
+  },
+  {
+    "name": "idm",
+    "path": "../src/modules/idm",
+    "routes": "server/routes",
+    "github": "https://github.com/carmel-6000/idm",
+    "fetch-version": "latest",
+    "current-version": "1.0.0",
+    "enabled": false
   }
 ]
