@@ -68,5 +68,13 @@
     "fetch-version": "latest",
     "current-version": "1.0.0",
     "enabled": false
+  },
+  {
+    "name": "supermodel",
+    "path": "../src/modules/supermodel",
+    "github": "https://github.com/carmel-6000/supermodel",
+    "fetch-version": "latest",
+    "current-version": "1.0.0",
+    "enabled": false
   }
 ]
