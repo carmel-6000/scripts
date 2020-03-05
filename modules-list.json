@@ -73,6 +73,7 @@
     "name": "supermodel",
     "path": "../src/modules/supermodel",
     "github": "https://github.com/carmel-6000/supermodel",
+    "mixins": "server/mixins",
     "fetch-version": "latest",
     "current-version": "1.0.0",
     "enabled": false
