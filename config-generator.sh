@@ -209,7 +209,7 @@ for index in "${!modulesList[@]}"; do
             writeServerConfig $modulename $moduleFolderPath "dev" $pwd/server/
 
             if [ ! -s $moduleFolderPath/config/config.production.json ]; then
-                echo -e "{$ITALIC}missing config.prod file, using dev-config ${NC}"
+                echo -e "${ITALIC}missing config.prod file, using dev-config ${NC}"
                 writeServerConfig $modulename $moduleFolderPath "dev" $pwd/server/ "prod"
             fi
         fi
