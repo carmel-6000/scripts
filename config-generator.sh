@@ -226,4 +226,4 @@ for index in "${!modulesList[@]}"; do
 
 done
 
-echo -e "\e[32mDone adding to config.json, \\nfill in all your data.\\n"
+echo -e "\e[32mDone adding to config.json, \\nfill in all your data.\\n${NC}"
